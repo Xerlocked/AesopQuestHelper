@@ -1,3 +1,4 @@
+import os
 import tkinter
 import tkinter.font
 import tkinter.ttk
@@ -13,7 +14,6 @@ Quest = sub.JsonHelper()
 MainWindow.title("Aesop Quest Helper")  # title
 MainWindow.geometry("480x720+100+100")  # size
 MainWindow.resizable(False, False)  # resize option
-SelectItemIndex: int = -1
 
 # Font
 DefaultFont = tkinter.font.Font(family="맑은 고딕")
@@ -28,8 +28,9 @@ ButtonFrame = tkinter.Frame(MainWindow)
 
 # Label
 lQuestName = tkinter.Label(MainWindow, text="퀘스트 이름", font=DefaultFont11)
-lQuestType = tkinter.Label(MainWindow, text="퀘스트 종류", font=DefaultFont11)
+lQuestType = tkinter.Label(MainWindow, text="퀘스트 타입", font=DefaultFont11)
 lQuestGoal = tkinter.Label(MainWindow, text="퀘스트 목표", font=DefaultFont11)
+lQuestGoalExplain = tkinter.Label(MainWindow, text="타입이 [일반]이면, 목표를 0으로 설정해주세요.", font=DefaultFont9, fg="red")
 
 # TextField
 tQuestName = tkinter.Entry(MainWindow)
@@ -61,7 +62,7 @@ def LoadQuest():
     filetype = (('json files', '*.json'),
                 ('All files', '*,*'))
     filename = fd.askopenfilename(title='Open a file',
-                                  initialdir='/',
+                                  initialdir=os.getcwd,
                                   filetypes=filetype)
     if filename:
         r = Quest.AppendJsonData(filename)
@@ -75,12 +76,20 @@ def LoadQuest():
     else:
         showinfo(title="Cancel", message="취소되었습니다.")
 
+def RemoveItem():
+    try:
+        select_iid = JsonTreeView.focus()
+        item_index = JsonTreeView.index(select_iid)
+        JsonTreeView.delete(JsonTreeView.selection()[0])
+        Quest.RemoveAtQuest(item_index)
+    except IndexError:
+        return
+
 def ClearView():
+    if Quest.length() <= 0:
+        return
     Quest.ClearQuest()
     JsonTreeView.delete(*JsonTreeView.get_children())
-
-def item_selected(event):
-    global SelectItemIndex = JsonTreeView.index(JsonTreeView.selection()[0])
 
 # Menu
 TopMenuBar = tkinter.Menu(MainWindow)
@@ -105,13 +114,11 @@ JsonTreeView.heading("type", text="퀘스트 타입")
 JsonTreeView.column("goal", width=80)
 JsonTreeView.heading("goal", text="퀘스트 목표")
 
-JsonTreeView.bind('<<TreeviewSelect>>', item_selected)
-
 # Button
-bQuestAppend = tkinter.Button(ButtonFrame, text="추가", font=DefaultFont11, command=QuestAppend)
+bQuestAppend = tkinter.Button(ButtonFrame, text="추가", width="10", font=DefaultFont11, command=QuestAppend)
 bQuestAppend.pack(side="left", fill="y")
 
-bQuestRemoveAt = tkinter.Button(ButtonFrame, text="삭제", font=DefaultFont11)
+bQuestRemoveAt = tkinter.Button(ButtonFrame, text="삭제", font=DefaultFont11, command=RemoveItem)
 bQuestRemoveAt.pack(fill="both")
 
 bQuestClear = tkinter.Button(ButtonFrame, text="전체삭제", font=DefaultFont11, command=ClearView)
@@ -128,6 +135,8 @@ cQuestType.grid(row=1, column=1)
 
 lQuestGoal.grid(row=2, column=0)
 tQuestGoal.grid(row=2, column=1)
+
+lQuestGoalExplain.grid(row=3, columnspan=2)
 
 ButtonFrame.place(x=280, y=5, width=180, height=70)
 

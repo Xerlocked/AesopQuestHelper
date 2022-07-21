@@ -28,6 +28,7 @@ class JsonHelper:
 
     def RemoveAtQuest(self, index):
         self.quest_list.pop(index)
+        print(self.quest_list)
 
     def WriteJson(self):
         if self.length() > 0:
