@@ -19,16 +19,13 @@ class JsonHelper:
 
         new_quest = {"name": qname, "type": qtype, "goal": qgoal}
         self.quest_list.append(new_quest)
-        print(self.quest_list)
         return True
 
     def ClearQuest(self):
         self.quest_list.clear()
-        print(self.quest_list)
 
     def RemoveAtQuest(self, index):
         self.quest_list.pop(index)
-        print(self.quest_list)
 
     def WriteJson(self):
         if self.length() > 0:
@@ -59,25 +56,3 @@ class JsonHelper:
 
     def length(self):
         return len(self.quest_list)
-
-# listQuest = []
-# dictQuest1 = {"name": "save princess", "type": "count", "goal": 2}
-# dictQuest2 = {"name": "kill princess", "type": "count", "goal": 4}
-
-# listQuest.append(dictQuest1)
-# listQuest.append(dictQuest2)
-
-# json_string = json.dumps(listQuest, indent=4)
-
-# print(json_string)
-
-# json_load = json.loads(json_string)
-
-# print(json_load[0]["name"])
-
-# json_str = json.dumps(json_obj, indent=4)
-# print(json_str)
-
-# json_load = json.loads(json_str)
-
-# print(json_load['quest'][1]['name'])
