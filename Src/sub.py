@@ -17,7 +17,7 @@ class JsonHelper:
                     self.contain_num = n
                     return False
 
-        new_quest = {"name": qname, "type": qtype, "goal": qgoal}
+        new_quest = {"name": qname, "type": qtype, "goal": int(qgoal)}
         self.quest_list.append(new_quest)
         return True
 

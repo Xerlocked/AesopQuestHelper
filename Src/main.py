@@ -30,16 +30,27 @@ ButtonFrame = tkinter.Frame(MainWindow)
 lQuestName = tkinter.Label(MainWindow, text="퀘스트 이름", font=DefaultFont11)
 lQuestType = tkinter.Label(MainWindow, text="퀘스트 타입", font=DefaultFont11)
 lQuestGoal = tkinter.Label(MainWindow, text="퀘스트 목표", font=DefaultFont11)
-lQuestGoalExplain = tkinter.Label(MainWindow, text="타입이 [일반]이면, 목표를 0으로 설정해주세요.", font=DefaultFont9, fg="red")
+lQuestGoalExplain = tkinter.Label(MainWindow, text="Ver. 1.0 - Aesop Quest Builder", font=DefaultFont9, fg="red")
 
 # TextField
 tQuestName = tkinter.Entry(MainWindow)
 tQuestGoal = tkinter.Entry(MainWindow)
 
 # ComboBox
+
+def ComboBoxSelected(event):
+    if cQuestType.get() == "일반":
+        tQuestGoal.delete(0, tkinter.END)
+        tQuestGoal.insert(0, '0')
+        tQuestGoal['state'] = "readonly"
+    else:
+        tQuestGoal['state'] = "normal"
+
+
 cQuestType = tkinter.ttk.Combobox(MainWindow, width="10", height="10", values=EQuestType,
                                   state="readonly", justify="center")
 cQuestType.set("선택")
+cQuestType.bind('<<ComboboxSelected>>', ComboBoxSelected)
 
 # Command
 
