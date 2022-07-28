@@ -30,7 +30,8 @@ class JsonHelper:
     def WriteJson(self):
         if self.length() > 0:
             with open('Quest.json', 'w', encoding='UTF-8') as json_file:
-                json.dump(self.quest_list, json_file, indent=4, ensure_ascii=False)
+                jsonObject = {'Quests': self.quest_list}
+                json.dump(jsonObject, json_file, indent=4, ensure_ascii=False)
             return True
         else:
             return False
@@ -43,6 +44,7 @@ class JsonHelper:
     def AppendJsonData(self, path):
         json_data = self.__ReadJson(path)
         if json_data is not None:
+            json_data = json_data['Quests']
             for data in json_data:
                 self.AppendQuest(data["name"], data["type"], data["goal"], True)
 
