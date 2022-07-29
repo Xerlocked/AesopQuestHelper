@@ -2,7 +2,7 @@ import os
 import tkinter
 import tkinter.font
 import tkinter.ttk
-from tkinter import filedialog as fd
+from tkinter import CENTER, filedialog as fd
 from tkinter.messagebox import showerror
 from tkinter.messagebox import showinfo
 import sub
@@ -30,11 +30,13 @@ ButtonFrame = tkinter.Frame(MainWindow)
 lQuestName = tkinter.Label(MainWindow, text="퀘스트 이름", font=DefaultFont11)
 lQuestType = tkinter.Label(MainWindow, text="퀘스트 타입", font=DefaultFont11)
 lQuestGoal = tkinter.Label(MainWindow, text="퀘스트 목표", font=DefaultFont11)
-lQuestGoalExplain = tkinter.Label(MainWindow, text="Ver. 1.0 - Aesop Quest Builder", font=DefaultFont9, fg="red")
+lQuestDesc = tkinter.Label(MainWindow, text="퀘스트 설명", font=DefaultFont11)
+lQuestGoalExplain = tkinter.Label(MainWindow, text="Ver. 1.1 - Aesop Quest Builder", font=DefaultFont9, fg="red")
 
 # TextField
 tQuestName = tkinter.Entry(MainWindow)
 tQuestGoal = tkinter.Entry(MainWindow)
+tQuestDesc = tkinter.Entry(MainWindow)
 
 # ComboBox
 
@@ -55,9 +57,9 @@ cQuestType.bind('<<ComboboxSelected>>', ComboBoxSelected)
 # Command
 
 def QuestAppend():
-    r = Quest.AppendQuest(tQuestName.get(), cQuestType.get(), tQuestGoal.get())
+    r = Quest.AppendQuest(tQuestName.get(), cQuestType.get(), tQuestGoal.get(), tQuestDesc.get())
     if r:
-        new_values = [tQuestName.get(), cQuestType.get(), tQuestGoal.get()]
+        new_values = [tQuestName.get(), cQuestType.get(), tQuestGoal.get(), tQuestDesc.get()]
         JsonTreeView.insert('', tkinter.END, values=new_values)
     else:
         showerror(title="오류", message="빈칸 또는 중복이름이 있는지 확인해주세요.")
@@ -80,7 +82,7 @@ def LoadQuest():
         if r:
             update_list = Quest.Get()
             for item in update_list:
-                value = [item["name"], item["type"], item["goal"]]
+                value = [item["name"], item["type"], item["goal"], item["desc"]]
                 JsonTreeView.insert('', tkinter.END, values=value)
         else:
             showerror(title="Error", message="올바르지 않은 JSON 파일입니다.")
@@ -112,18 +114,21 @@ TMenuFile.add_command(label="종료", command=MainWindow.destroy)
 TopMenuBar.add_cascade(label="파일", menu=TMenuFile)
 
 # TreeView
-columns = ('name', 'type', 'goal')
+columns = ('name', 'type', 'goal', 'desc')
 
 JsonTreeView = tkinter.ttk.Treeview(MainWindow, columns=columns, show='headings')
 
-JsonTreeView.column("name", width=305)
-JsonTreeView.heading('name', text="퀘스트 이름")
+JsonTreeView.column("name", width=140, anchor=CENTER)
+JsonTreeView.heading('name', text="이름")
 
-JsonTreeView.column("type", width=80)
-JsonTreeView.heading("type", text="퀘스트 타입")
+JsonTreeView.column("type", width=60, anchor=CENTER)
+JsonTreeView.heading("type", text="타입")
 
-JsonTreeView.column("goal", width=80)
-JsonTreeView.heading("goal", text="퀘스트 목표")
+JsonTreeView.column("goal", width=60, anchor=CENTER)
+JsonTreeView.heading("goal", text="목표")
+
+JsonTreeView.column('desc', width= 205, anchor=CENTER)
+JsonTreeView.heading('desc', text='설명')
 
 # Button
 bQuestAppend = tkinter.Button(ButtonFrame, text="추가", width="10", font=DefaultFont11, command=QuestAppend)
@@ -147,11 +152,14 @@ cQuestType.grid(row=1, column=1)
 lQuestGoal.grid(row=2, column=0)
 tQuestGoal.grid(row=2, column=1)
 
-lQuestGoalExplain.grid(row=3, columnspan=2)
+lQuestDesc.grid(row=3, column=0)
+tQuestDesc.grid(row=3, column=1)
+
+lQuestGoalExplain.grid(row=3, column=2, columnspan=2)
 
 ButtonFrame.place(x=280, y=5, width=180, height=70)
 
-JsonTreeView.place(x=5, y=100, width=470, height=600)
+JsonTreeView.place(x=5, y=120, width=470, height=580)
 
 MainWindow.config(menu=TopMenuBar)
 

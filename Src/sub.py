@@ -7,8 +7,8 @@ class JsonHelper:
         self.quest_list = []
         self.contain_num = 0
 
-    def AppendQuest(self, qname, qtype, qgoal, callLoad = False):
-        if qname == '' or qtype == '선택' or qgoal == '':
+    def AppendQuest(self, qname, qtype, qgoal, qdesc, callLoad = False):
+        if qname == '' or qtype == '선택' or qgoal == '' or qdesc == '':
             return False
 
         if not callLoad:
@@ -17,7 +17,7 @@ class JsonHelper:
                     self.contain_num = n
                     return False
 
-        new_quest = {"name": qname, "type": qtype, "goal": int(qgoal)}
+        new_quest = {"name": qname, "type": qtype, "goal": int(qgoal), "desc": qdesc}
         self.quest_list.append(new_quest)
         return True
 
@@ -46,7 +46,7 @@ class JsonHelper:
         if json_data is not None:
             json_data = json_data['Quests']
             for data in json_data:
-                self.AppendQuest(data["name"], data["type"], data["goal"], True)
+                self.AppendQuest(data["name"], data["type"], data["goal"], data["desc"], True)
 
             self.contain_num = self.length()
             return True
